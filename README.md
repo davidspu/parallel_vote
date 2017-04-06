@@ -1,4 +1,4 @@
-# Horizons React &amp; Express project template
+# Parallel Vote
 
 ## Usage
 
