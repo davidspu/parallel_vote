@@ -44,3 +44,4 @@ npm-debug.log
 .DS_Store
 public/bundle.js
 .sass-cache
+allowed_pw.js

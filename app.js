@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bundle', express.static(path.join(__dirname, 'bundle')));
 
 app.get('/', function(req, res) {
-  res.render('index');
+  res.render('index',{ title: 'Parallel Vote'});
 });
 
 // catch 404 and forward to error handler
