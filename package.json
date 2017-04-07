@@ -4,7 +4,7 @@
   "author": "David Pu",
   "repository": "https://github.com/davidspu/parallel_vote.git",
   "scripts": {
-    "start": "concurrently -k \"nodemon ./bin/www\" \"npm run watch\"",
+    "start": "nodemon ./bin/www",
     "watch": "watchify client/index.js -o public/bundle.js -t [ babelify --presets [ es2015 react ] ]",
     "postinstall": "browserify client/index.js -o public/bundle.js -t [ babelify --presets [ es2015 react ] ]"
   },
