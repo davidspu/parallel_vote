@@ -24,6 +24,7 @@
     "mongoose": "^4.9.3",
     "mongoose-findorcreate": "^1.0.1",
     "morgan": "~1.6.1",
+    "nodemon": "^1.11.0",
     "react": "^15.2.1",
     "react-dom": "^15.2.1"
   },
