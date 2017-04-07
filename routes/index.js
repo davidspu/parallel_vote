@@ -1,8 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var models = require('../models');
-var Talley = models.Talley;
-var Pp = models.Pp;
 const ini_state = {
                   iceland: 0,
                   cankun: 0,
@@ -13,7 +10,6 @@ const ini_state = {
 
 var curr_state = Object.assign(ini_state);
 var crypto = require("crypto");
-var id = crypto.randomBytes(20).toString('hex');
 var allowed_pw = [];
 var voted = {};
 

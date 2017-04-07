@@ -3,7 +3,7 @@ var path = require('path');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var app = express();
-
+var routes = require('./routes/index');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
@@ -13,9 +13,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bundle', express.static(path.join(__dirname, 'bundle')));
 
-app.get('/', function(req, res) {
-  res.render('index',{ title: 'Parallel Vote'});
-});
+
+app.use('/', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

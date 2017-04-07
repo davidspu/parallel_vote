@@ -1,16 +1,42 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var pw = require('../allowed_pw').pw;
-const ini_state = {voted: false,
-						iceland: 0,
-						cankun: 0,
-						machu: 0,
-						canada: 0,
-						count: 5
-						};
+
+const ini_state = {
+	valid: true,
+	voted: false
+};
+
 var App = React.createClass({
 	componentWillMount() {
 		this.setState(ini_state);
+		$.ajax("/count", {
+	      method: "get",
+	      success: function (response) {
+	      	response = Number(response)
+	      	if (response <= 0) {
+	      		this.getResults();
+	      	} else {
+	        	this.setState({count: response});
+	    	}
+	      }.bind(this),
+	      error: function (err) {
+	        console.log('error', err)
+	      }.bind(this)
+	    });
+	},
+	getResults() {
+		$.ajax("/results", {
+	      method: "get",
+	      success: function (response) {
+	      	this.setState({
+	      		result: response,
+	      		completed: true
+	      	});
+	      }.bind(this),
+	      error: function (err) {
+	        console.log('error', err)
+	      }.bind(this)
+	    });
 	},
 	validateAnswer(evt) {
 		//skip all events except for Enter
@@ -18,31 +44,60 @@ var App = React.createClass({
 		evt.preventDefault();
 		var ans = evt.target.value;
 		evt.target.value = "";
-		if (this.state[ans]) {
-			this.setState({voted: true});
-			return;
-		}
-		if (pw.indexOf(ans) > -1){
-			var new_state = {};
-			new_state[ans] = true;
-			new_state['choice'] = true;
-			this.setState(new_state);
-		}
+		$.ajax("/passphrase", {
+	      method: "POST",
+	      data: {
+	        pw: ans
+	      },
+	      success: function (response) {
+	        if (response === "invalid") {
+	        	this.setState({valid: false});
+	        	return
+	        }
+	        if (response === "voted") {
+				this.setState({voted: true});
+			} else {
+				this.setState({choice: true})
+			}
+	      }.bind(this),
+	      error: function (err) {
+	        console.log('error', err)
+	      }.bind(this)
+	    });
+		
 	},
 	choose(evt) {
 		evt.preventDefault();
 		var ans = evt.target.value;
-		if (this.state.hasOwnProperty(ans)) {
-			var new_state = {};
-			new_state[ans] = this.state[ans] + 1;
-			new_state['count'] = this.state['count'] - 1;
-			this.setState(new_state);
-			this.setState({voted: true});
-		}
+		$.ajax("/choose", {
+	      method: "POST",
+	      data: {
+	        choice: ans
+	      },
+	      success: function (response) {
+	        this.setState({
+	        	voted: true,
+	        	count: response
+	        });
+	      }.bind(this),
+	      error: function (err) {
+	        console.log('error', err)
+	      }.bind(this)
+	    });
 
 	},
 	render: function() {
-		console.log(this.state);
+		console.log("render: this.state -> ", this.state)
+
+		if (this.state.completed) {
+			return (
+				<center> 
+					<h2> Voting has completed </h2> 
+					<h3 className="red"> Result: {this.state.result} </h3>
+				</center>
+			)
+		}
+
 		if (this.state.voted) {
 			return (
 				<center> 
@@ -54,6 +109,8 @@ var App = React.createClass({
 			return (
 				<div> 
 					<center> 
+						<h2> Pick one: </h2> 
+						<br/> 
 						<form>
 							<select
 						      	onChange={this.choose}
@@ -77,6 +134,7 @@ var App = React.createClass({
 					<h2> Vote you fools! </h2>
 					<h3> Remaining Votes: {this.state.count} </h3>
 					<br/>
+					{this.state.valid || <h3 className="red"> Invalid PassPhrase </h3>}
 					<form>
 						<span> Enter your passphrase: </span> 
 						&nbsp; <input 

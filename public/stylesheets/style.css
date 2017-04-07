@@ -10,3 +10,7 @@ input {
 input:focus {
     border-bottom:2px solid rgba(70,83,106,1);
 }
+
+.red {
+	color: red;
+}
