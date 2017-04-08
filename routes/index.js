@@ -1,14 +1,19 @@
 var express = require('express');
 var router = express.Router();
+var crypto = require("crypto");
+var mongoose = require('mongoose');
+
+
 const ini_state = {
-                  "Iceland": 0,
-                  "Cankun": 0,
-                  "Machu Pichu": 0,
-                  "Canada": 0
+  "Iceland": 0,
+  "Cankun": 0,
+  "Machu Pichu": 0,
+  "Canada": 0,
+  "Tokyo": 0
 };
 var count = 5;
 var curr_state = Object.assign(ini_state);
-var crypto = require("crypto");
+
 var allowed_pw = [];
 var voted = {};
 
@@ -88,12 +93,7 @@ router.get('/reset', function(req, res, next) {
   generate_hash();
   count = 5;
   voted = {};
-  curr_state = {
-    "Iceland": 0,
-    "Cankun": 0,
-    "Machu Pichu": 0,
-    "Canada": 0
-  };
+  curr_state = JSON.parse(JSON.stringify(ini_state));
   res.redirect('/');
 })
 

@@ -5,7 +5,7 @@ const ini_state = {
 	valid: true,
 	voted: false
 };
-var destinations = ["Canada", "Cankun", "Iceland", "Machu Pichu"];
+var destinations = ["Canada", "Cankun", "Iceland", "Machu Pichu", "Tokyo"];
 
 var App = React.createClass({
 	getInitialState(){
