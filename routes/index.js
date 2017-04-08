@@ -13,12 +13,11 @@ var allowed_pw = [];
 var voted = {};
 
 function generate_hash() {
-  allowed_pw = [];
-  for (var i = 0; i < 5; i ++) {
-    // allowed_pw.push(crypto.randomBytes(20).toString('hex'));
-    allowed_pw.push("" + i);
-    console.log('hash', i, allowed_pw[i]);
-  }
+  allowed_pw = ["q", "w", "e", "r", "t"];
+  // for (var i = 0; i < 5; i ++) {
+  //   allowed_pw.push(crypto.randomBytes(20).toString('hex'));
+  //   console.log('hash', i, allowed_pw[i]);
+  // }
 }
 
 function get_majority(obj) {
@@ -66,6 +65,9 @@ router.get('/count', function(req, res, next) {
 router.post('/choose', function(req, res, next) {
   var choices = JSON.parse(req.body.choices);
   choices.forEach(function(choice){
+    console.log("****************************")
+    console.log("voted", choice);
+    console.log("****************************")
     curr_state[choice] += 1;
   });
   count --;

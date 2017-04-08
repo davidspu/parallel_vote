@@ -5,7 +5,7 @@ const ini_state = {
 	valid: true,
 	voted: false
 };
-const destinations = ["Canada", "Cankun", "Iceland", "Machu Pichu"];
+var destinations = ["Canada", "Cankun", "Iceland", "Machu Pichu"];
 
 var App = React.createClass({
 	componentWillMount() {
@@ -100,26 +100,25 @@ var App = React.createClass({
 		        choices: JSON.stringify(selected)
 		      },
 		      success: function (response) {
-		      	if (response !== "done") {
-		      		var new_state = {
-			        	voted: true,
-			        	choose: false,
-			        	unselected: false,
-			        	count: response
-			        };
-			      	destinations.forEach(function(d){
-						new_state[d] = "btn btn-default";
-					});
-			        this.setState(new_state);
+		      	if (response === "done") {
+		      		this.getResults();  
 		      	} else {
-		      		this.getResults();
-		      	}
-		      	
+		      		this.setState({count: response});
+		      	}  	
 		      }.bind(this),
 		      error: function (err) {
 		        console.log('error', err)
 		      }.bind(this)
 		    });
+		    var new_state = {
+	        	voted: true,
+	        	choose: false,
+	        	unselected: false
+	        };
+	      	destinations.forEach(function(d){
+				new_state[d] = "btn btn-default";
+			});
+	        this.setState(new_state);
 		} else {
 			this.setState({unselected: true});
 		}
