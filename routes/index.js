@@ -69,6 +69,10 @@ router.post('/choose', function(req, res, next) {
     curr_state[choice] += 1;
   });
   count --;
+  if (count === 0) {
+    res.redirect('/');
+    return
+  }
   res.status(200).send(JSON.stringify(count));
   res.end();
 });
@@ -76,6 +80,8 @@ router.post('/choose', function(req, res, next) {
 router.get('/reset', function(req, res, next) {
   generate_hash();
   count = 5;
+  voted = {};
+  curr_state = Object.assign(ini_state);
   res.redirect('/');
 })
 
