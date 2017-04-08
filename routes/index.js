@@ -15,7 +15,7 @@ var voted = {};
 function generate_hash() {
   allowed_pw = [];
   for (var i = 0; i < 5; i ++) {
-    allowed_pw.push("" + i);
+    allowed_pw.push(crypto.randomBytes(20).toString('hex'));
     console.log('hash', i, allowed_pw[i]);
   }
 }

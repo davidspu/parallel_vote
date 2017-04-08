@@ -68,7 +68,7 @@ var App = React.createClass({
 	},
 	onClick(evt) {
 		evt.preventDefault();
-		this.setState({voted: false});
+		this.setState({voted: false, choice: false});
 	},
 	choose(evt) {
 		evt.preventDefault();
@@ -106,7 +106,7 @@ var App = React.createClass({
 					<h2> You've voted! </h2> 
 					<h3> Remaining Votes: {this.state.count} </h3>
 					<form>
-					<button onClick={this.onClick}> Home </button>
+					<button onClick={this.onClick} className="btn btn-default"> Home </button>
 					</form>
 				</center>)
 		}

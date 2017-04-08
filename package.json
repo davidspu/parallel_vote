@@ -5,8 +5,6 @@
   "repository": "https://github.com/davidspu/parallel_vote.git",
   "scripts": {
     "start": "nodemon ./bin/www",
-    "watch": "watchify client/index.js -o public/bundle.js -t [ babelify --presets [ es2015 react ] ]",
-    "postinstall": "browserify client/index.js -o public/bundle.js -t [ babelify --presets [ es2015 react ] ]"
   },
   "license": "MIT",
   "dependencies": {
