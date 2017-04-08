@@ -66,6 +66,10 @@ var App = React.createClass({
 	    });
 		
 	},
+	onClick(evt) {
+		evt.preventDefault();
+		this.setState({voted: false});
+	},
 	choose(evt) {
 		evt.preventDefault();
 		var ans = evt.target.value;
@@ -87,8 +91,6 @@ var App = React.createClass({
 
 	},
 	render: function() {
-		console.log("render: this.state -> ", this.state)
-
 		if (this.state.completed) {
 			return (
 				<center> 
@@ -103,6 +105,9 @@ var App = React.createClass({
 				<center> 
 					<h2> You've voted! </h2> 
 					<h3> Remaining Votes: {this.state.count} </h3>
+					<form>
+					<button onClick={this.onClick}> Home </button>
+					</form>
 				</center>)
 		}
 		if (this.state.choice) {
@@ -131,7 +136,7 @@ var App = React.createClass({
 		return (
 			<div>
 				<center>
-					<h2> Vote you fools! </h2>
+					<h2> Fly you fools! </h2>
 					<h3> Remaining Votes: {this.state.count} </h3>
 					<br/>
 					{this.state.valid || <h3 className="red"> Invalid PassPhrase </h3>}
