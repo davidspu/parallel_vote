@@ -88,7 +88,12 @@ router.get('/reset', function(req, res, next) {
   generate_hash();
   count = 5;
   voted = {};
-  curr_state = Object.assign(ini_state);
+  curr_state = {
+    "Iceland": 0,
+    "Cankun": 0,
+    "Machu Pichu": 0,
+    "Canada": 0
+  };
   res.redirect('/');
 })
 
