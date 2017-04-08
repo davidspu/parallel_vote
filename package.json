@@ -4,7 +4,7 @@
   "author": "David Pu",
   "repository": "https://github.com/davidspu/parallel_vote.git",
   "scripts": {
-    "start": "nodemon ./bin/www",
+    "start": "nodemon ./bin/www"
   },
   "license": "MIT",
   "dependencies": {
