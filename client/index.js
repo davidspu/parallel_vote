@@ -5,10 +5,16 @@ const ini_state = {
 	valid: true,
 	voted: false
 };
+const destinations = ["Canada", "Cankun", "Iceland", "Machu Pichu"];
 
 var App = React.createClass({
 	componentWillMount() {
-		this.setState(ini_state);
+		var new_state = {};
+		new_state = Object.assign(ini_state);
+		destinations.forEach(function(d){
+			new_state[d] = "btn btn-default";
+		});
+		this.setState(new_state);
 		$.ajax("/count", {
 	      method: "get",
 	      success: function (response) {
@@ -90,6 +96,45 @@ var App = React.createClass({
 	    });
 
 	},
+	updateButton(evt) {
+		evt.preventDefault();
+		var new_state = {};
+		new_state = Object.assign(this.state);
+		new_state[evt.target.value] = "btn selected";
+		this.setState(new_state);
+	},
+	submit_choice(evt) {
+		evt.preventDefault();
+		var selected = [];
+		destinations.forEach(function(d){
+			if (this.state[d] === "btn selected") selected.push(d);
+		}.bind(this));
+		if (selected.length) {
+			$.ajax("/choose", {
+		      method: "POST",
+		      data: {
+		        choices: JSON.stringify(selected)
+		      },
+		      success: function (response) {
+		      	var new_state = {
+		        	voted: true,
+		        	choose: false,
+		        	unselected: false,
+		        	count: response
+		        };
+		      	destinations.forEach(function(d){
+					new_state[d] = "btn btn-default";
+				});
+		        this.setState(new_state);
+		      }.bind(this),
+		      error: function (err) {
+		        console.log('error', err)
+		      }.bind(this)
+		    });
+		} else {
+			this.setState({unselected: true});
+		}
+	},
 	render: function() {
 		if (this.state.completed) {
 			return (
@@ -103,7 +148,7 @@ var App = React.createClass({
 		if (this.state.voted) {
 			return (
 				<center> 
-					<h2> You've voted! </h2> 
+					<h2> You've voted! </h2>
 					<h3> Remaining Votes: {this.state.count} </h3>
 					<form>
 					<button onClick={this.onClick} className="btn btn-default"> Home </button>
@@ -111,22 +156,27 @@ var App = React.createClass({
 				</center>)
 		}
 		if (this.state.choice) {
+			var buttons = [];
+			for (var i = 0; i < destinations.length; i++) {
+				buttons.push(<button
+							key={destinations[i]}
+							className={this.state[destinations[i]]}
+							value={destinations[i]}
+							onClick={this.updateButton}>{destinations[i]} </button>)
+			}
+			var angry = this.state.unselected ? "red" : "";
 			return (
 				<div> 
 					<center> 
-						<h2> Pick one: </h2> 
+						<h2 className={angry}> Pick any: </h2> 
 						<br/> 
 						<form>
-							<select
-						      	onChange={this.choose}
-						      	autoFocus={focus}
-						      	>
-						      	<option value="select" key = "dummy">Select</option>
-						      	<option value="cankun" key = "cankun">Cankun</option>
-						      	<option value="iceland" key = "iceland">Iceland</option>
-						      	<option value="machu" key = "machu">Machu Pichu</option>
-						      	<option value="canada" key = "canada">Canada</option>
-						    </select>
+							<span> {buttons} </span>
+							<span> <button
+									key="submit"
+									className="btn btn-danger"
+									onClick={this.submit_choice}> Submit </button>
+							</span>
 						</form>
 					</center>
 				</div> 
@@ -136,7 +186,8 @@ var App = React.createClass({
 		return (
 			<div>
 				<center>
-					<h2> Fly you fools! </h2>
+					<h1> CSS by Yuan Chang </h1>
+					<h2> We proudly present: Fly you fools! </h2>
 					<h3> Remaining Votes: {this.state.count} </h3>
 					<br/>
 					{this.state.valid || <h3 className="red"> Invalid PassPhrase </h3>}

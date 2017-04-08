@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 const ini_state = {
-                  iceland: 0,
-                  cankun: 0,
-                  machu: 0,
-                  canada: 0
+                  "Iceland": 0,
+                  "Cankun": 0,
+                  "Machu Pichu": 0,
+                  "Canada": 0
 };
 var count = 5;
 var curr_state = Object.assign(ini_state);
@@ -15,7 +15,8 @@ var voted = {};
 function generate_hash() {
   allowed_pw = [];
   for (var i = 0; i < 5; i ++) {
-    allowed_pw.push(crypto.randomBytes(20).toString('hex'));
+    // allowed_pw.push(crypto.randomBytes(20).toString('hex'));
+    allowed_pw.push("" + i);
     console.log('hash', i, allowed_pw[i]);
   }
 }
@@ -63,15 +64,13 @@ router.get('/count', function(req, res, next) {
 });
 
 router.post('/choose', function(req, res, next) {
-  var choice = req.body.choice;
-  if (curr_state.hasOwnProperty(choice)) {
+  var choices = JSON.parse(req.body.choices);
+  choices.forEach(function(choice){
     curr_state[choice] += 1;
-    count --;
-    res.status(200).send(JSON.stringify(count));
-    res.end();
-  } else {
-    res.end();
-  }
+  });
+  count --;
+  res.status(200).send(JSON.stringify(count));
+  res.end();
 });
 
 router.get('/reset', function(req, res, next) {

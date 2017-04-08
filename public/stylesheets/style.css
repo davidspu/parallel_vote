@@ -14,3 +14,68 @@ input:focus {
 .red {
 	color: red;
 }
+
+.selected {
+  background-color: #6abd2c;
+  color: white; 
+}
+.btn {
+	margin: 5px;
+}
+
+h1 {
+	color: pink;
+}
+
+/*************************************************************************/
+
+svg {
+  width: 700px;
+  height: 700px;
+  transform: translate(50%);
+  
+}
+
+@keyframes move {
+  0%,100%{
+    transform:translate(0px);
+  }
+  50%{
+    transform:translate(400px);
+  }
+}
+
+#cloud {
+  animation: move 10s infinite;
+}
+
+@keyframes rotatesun {
+  0%，100% {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(360deg);
+    opacity: 0.3;
+  }
+}
+
+#sun {
+    animation: rotatesun 10s infinite;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+  30% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+#mountain {
+  margin-top: 100px;
+  animation: bounceIn 10s ease-in-out infinite;
+}
