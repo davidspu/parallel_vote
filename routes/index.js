@@ -49,7 +49,6 @@ router.post('/passphrase', function(req, res, next) {
       res.end();
       return
     }
-    voted[pw_received] = true;
     res.status(200).send("ok");
   } else {
     res.status(200).send("invalid");
@@ -63,13 +62,19 @@ router.get('/count', function(req, res, next) {
 });
 
 router.post('/choose', function(req, res, next) {
+  var pw = req.body.pw;
   var choices = JSON.parse(req.body.choices);
+  if (voted[pw]) {
+    res.status(400).send("someone already voted");
+    return
+  }
   choices.forEach(function(choice){
     console.log("****************************")
     console.log("voted", choice);
     console.log("****************************")
     curr_state[choice] += 1;
   });
+  voted[pw] = true;
   count --;
   if (count === 0) {
     res.status(200).send("done");

@@ -8,13 +8,15 @@ const ini_state = {
 var destinations = ["Canada", "Cankun", "Iceland", "Machu Pichu"];
 
 var App = React.createClass({
-	componentWillMount() {
+	getInitialState(){
 		var new_state = {};
 		new_state = Object.assign(ini_state);
 		destinations.forEach(function(d){
 			new_state[d] = "btn btn-default";
 		});
-		this.setState(new_state);
+		return new_state;
+	},
+	componentWillMount() {	
 		$.ajax("/count", {
 	      method: "get",
 	      success: function (response) {
@@ -63,7 +65,9 @@ var App = React.createClass({
 	        if (response === "voted") {
 				this.setState({voted: true});
 			} else {
-				this.setState({choice: true})
+				this.setState({
+					pw: ans,
+					choice: true})
 			}
 	      }.bind(this),
 	      error: function (err) {
@@ -97,28 +101,22 @@ var App = React.createClass({
 			$.ajax("/choose", {
 		      method: "POST",
 		      data: {
-		        choices: JSON.stringify(selected)
+		        choices: JSON.stringify(selected),
+		      	pw : this.state.pw
 		      },
 		      success: function (response) {
 		      	if (response === "done") {
 		      		this.getResults();  
 		      	} else {
+		      		this.setState(this.getInitialState());
+		    		this.setState({voted: true});
 		      		this.setState({count: response});
-		      	}  	
+		      	}  
 		      }.bind(this),
 		      error: function (err) {
 		        console.log('error', err)
 		      }.bind(this)
 		    });
-		    var new_state = {
-	        	voted: true,
-	        	choose: false,
-	        	unselected: false
-	        };
-	      	destinations.forEach(function(d){
-				new_state[d] = "btn btn-default";
-			});
-	        this.setState(new_state);
 		} else {
 			this.setState({unselected: true});
 		}
