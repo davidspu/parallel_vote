@@ -27,7 +27,8 @@
     "morgan": "~1.6.1",
     "nodemon": "^1.11.0",
     "react": "^15.2.1",
-    "react-dom": "^15.2.1"
+    "react-dom": "^15.2.1",
+    "watchify": "^3.9.0"
   },
   "devDependencies": {
     "concurrently": "^2.2.0",
