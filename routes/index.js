@@ -70,11 +70,11 @@ router.post('/choose', function(req, res, next) {
   });
   count --;
   if (count === 0) {
-    res.redirect('/');
-    return
+    res.status(200).send("done");
+  } else {
+    res.status(200).send(JSON.stringify(count));
+    res.end();
   }
-  res.status(200).send(JSON.stringify(count));
-  res.end();
 });
 
 router.get('/reset', function(req, res, next) {

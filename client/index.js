@@ -76,31 +76,15 @@ var App = React.createClass({
 		evt.preventDefault();
 		this.setState({voted: false, choice: false});
 	},
-	choose(evt) {
-		evt.preventDefault();
-		var ans = evt.target.value;
-		$.ajax("/choose", {
-	      method: "POST",
-	      data: {
-	        choice: ans
-	      },
-	      success: function (response) {
-	        this.setState({
-	        	voted: true,
-	        	count: response
-	        });
-	      }.bind(this),
-	      error: function (err) {
-	        console.log('error', err)
-	      }.bind(this)
-	    });
-
-	},
 	updateButton(evt) {
 		evt.preventDefault();
 		var new_state = {};
 		new_state = Object.assign(this.state);
-		new_state[evt.target.value] = "btn selected";
+		if (new_state[evt.target.value] === "btn selected") {
+			new_state[evt.target.value] = "btn btn-default"
+		} else {
+			new_state[evt.target.value] = "btn selected";
+		}
 		this.setState(new_state);
 	},
 	submit_choice(evt) {
@@ -116,16 +100,21 @@ var App = React.createClass({
 		        choices: JSON.stringify(selected)
 		      },
 		      success: function (response) {
-		      	var new_state = {
-		        	voted: true,
-		        	choose: false,
-		        	unselected: false,
-		        	count: response
-		        };
-		      	destinations.forEach(function(d){
-					new_state[d] = "btn btn-default";
-				});
-		        this.setState(new_state);
+		      	if (response !== "done") {
+		      		var new_state = {
+			        	voted: true,
+			        	choose: false,
+			        	unselected: false,
+			        	count: response
+			        };
+			      	destinations.forEach(function(d){
+						new_state[d] = "btn btn-default";
+					});
+			        this.setState(new_state);
+		      	} else {
+		      		this.getResults();
+		      	}
+		      	
 		      }.bind(this),
 		      error: function (err) {
 		        console.log('error', err)
