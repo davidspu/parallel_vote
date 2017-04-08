@@ -86,6 +86,7 @@ router.get('/reset', function(req, res, next) {
 })
 
 router.get('/results', function(req, res, next) {
+  console.log(curr_state);
   var r = get_majority(curr_state);
   if (r) {
     res.status(200).send(JSON.stringify(r));
