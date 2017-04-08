@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var crypto = require("crypto");
-var mongoose = require('mongoose');
+const fs = require('fs');
 
 
 const ini_state = {
@@ -9,7 +9,7 @@ const ini_state = {
   "Cankun": 0,
   "Machu Pichu": 0,
   "Canada": 0,
-  "Tokyo": 0
+  "Tokyo (Request by Mufei)": 0
 };
 var count = 5;
 var curr_state = Object.assign(ini_state);
@@ -18,11 +18,11 @@ var allowed_pw = [];
 var voted = {};
 
 function generate_hash() {
-  allowed_pw = ["q", "w", "e", "r", "t"];
-  // for (var i = 0; i < 5; i ++) {
-  //   allowed_pw.push(crypto.randomBytes(20).toString('hex'));
-  //   console.log('hash', i, allowed_pw[i]);
-  // }
+  // allowed_pw = ["q", "w", "e", "r", "t"];
+  for (var i = 0; i < 5; i ++) {
+    allowed_pw.push(crypto.randomBytes(20).toString('hex'));
+    console.log('hash', i, allowed_pw[i]);
+  }
 }
 
 function get_majority(obj) {

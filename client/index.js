@@ -172,7 +172,6 @@ var App = React.createClass({
 		return (
 			<div>
 				<center>
-					<h1> CSS by Yuan Chang </h1>
 					<h2> We proudly present: Fly you fools! </h2>
 					<h3> Remaining Votes: {this.state.count} </h3>
 					<br/>
