@@ -3,12 +3,12 @@ input {
     outline:0;
     background: transparent;
     border-bottom:2px solid rgba(70,83,106,0.15);
-    width:200px;
+    width:250px;
     text-align: center;
 }
 
 input:focus {
-    border-bottom:2px solid rgba(70,83,106,1);
+    border-bottom:3px solid rgba(70,83,106,1);
 }
 
 .red {
@@ -24,7 +24,7 @@ input:focus {
 }
 
 h1 {
-	color: pink;
+	color: rgba(70,83,106,1);
 }
 
 /*************************************************************************/

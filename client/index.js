@@ -7,15 +7,15 @@ const ini_state = {
 };
 var destinations = ["Canada", "Cankun", "Iceland", "Machu Pichu", "Tokyo (Request by Mufei)"];
 
-var App = React.createClass({
-	getInitialState(){
-		var new_state = {};
-		new_state = Object.assign(ini_state);
+class App extends React.Component{
+	constructor(props) {
+		super(props);
+		var new_state = JSON.parse(JSON.stringify(ini_state));
 		destinations.forEach(function(d){
 			new_state[d] = "btn btn-default";
 		});
-		return new_state;
-	},
+		this.state = new_state;
+	}
 	componentWillMount() {	
 		$.ajax("/count", {
 	      method: "get",
@@ -31,7 +31,7 @@ var App = React.createClass({
 	        console.log('error', err)
 	      }.bind(this)
 	    });
-	},
+	}
 	getResults() {
 		$.ajax("/results", {
 	      method: "get",
@@ -45,41 +45,11 @@ var App = React.createClass({
 	        console.log('error', err)
 	      }.bind(this)
 	    });
-	},
-	validateAnswer(evt) {
-		//skip all events except for Enter
-		if (evt.hasOwnProperty('key') && evt.key !== "Enter") return;
-		evt.preventDefault();
-		var ans = evt.target.value;
-		evt.target.value = "";
-		$.ajax("/passphrase", {
-	      method: "POST",
-	      data: {
-	        pw: ans
-	      },
-	      success: function (response) {
-	        if (response === "invalid") {
-	        	this.setState({valid: false});
-	        	return
-	        }
-	        if (response === "voted") {
-				this.setState({voted: true});
-			} else {
-				this.setState({
-					pw: ans,
-					choice: true})
-			}
-	      }.bind(this),
-	      error: function (err) {
-	        console.log('error', err)
-	      }.bind(this)
-	    });
-		
-	},
+	}
 	onClick(evt) {
 		evt.preventDefault();
 		this.setState({voted: false, choice: false});
-	},
+	}
 	updateButton(evt) {
 		evt.preventDefault();
 		var new_state = {};
@@ -90,7 +60,7 @@ var App = React.createClass({
 			new_state[evt.target.value] = "btn selected";
 		}
 		this.setState(new_state);
-	},
+	}
 	submit_choice(evt) {
 		evt.preventDefault();
 		var selected = [];
@@ -120,8 +90,35 @@ var App = React.createClass({
 		} else {
 			this.setState({unselected: true});
 		}
-	},
-	render: function() {
+	}
+	go_vote(evt) {
+		evt.preventDefault();
+		var ans = '123';
+		evt.target.value = "";
+		$.ajax("/passphrase", {
+	      method: "POST",
+	      data: {
+	        pw: ans
+	      },
+	      success: function (response) {
+	        if (response === "invalid") {
+	        	this.setState({valid: false});
+	        	return
+	        }
+	        if (response === "voted") {
+				this.setState({voted: true});
+			} else {
+				this.setState({
+					pw: ans,
+					choice: true})
+			}
+	      }.bind(this),
+	      error: function (err) {
+	        console.log('error', err)
+	      }.bind(this)
+	    });
+	}
+	render() {
 		if (this.state.completed) {
 			return (
 				<center> 
@@ -137,7 +134,7 @@ var App = React.createClass({
 					<h2> You've voted! </h2>
 					<h3> Remaining Votes: {this.state.count} </h3>
 					<form>
-					<button onClick={this.onClick} className="btn btn-default"> Home </button>
+					<button onClick={this.onClick.bind(this)} className="btn btn-default"> Home </button>
 					</form>
 				</center>)
 		}
@@ -161,7 +158,7 @@ var App = React.createClass({
 							<span> <button
 									key="submit"
 									className="btn btn-danger"
-									onClick={this.submit_choice}> Submit </button>
+									onClick={this.submit_choice.bind(this)}> Submit </button>
 							</span>
 						</form>
 					</center>
@@ -175,21 +172,12 @@ var App = React.createClass({
 					<h2> We proudly present: Fly you fools! </h2>
 					<h3> Remaining Votes: {this.state.count} </h3>
 					<br/>
-					{this.state.valid || <h3 className="red"> Invalid PassPhrase </h3>}
-					<form>
-						<span> Enter your passphrase: </span> 
-						&nbsp; <input 
-									type={"password"}
-									autoFocus={focus} 
-									onKeyPress={this.validateAnswer}
-									defaultValue={""}
-								/> 
-					</form>
+					<button key="go_vote" className="btn btn-primary" onClick={this.go_vote.bind(this)}> Vote </button>
 				</center>
 			</div>
 		);
 	}
-});
+}
 
 
 ReactDOM.render(<App />, document.getElementById('root'));

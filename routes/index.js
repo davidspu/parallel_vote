@@ -1,8 +1,17 @@
-var express = require('express');
-var router = express.Router();
-var crypto = require("crypto");
+const express = require('express');
+const router = express.Router();
+const crypto = require("crypto");
 const fs = require('fs');
+const Votes = require('../models/models').Votes
 
+router.use(function(req, res, next){
+  if (!req.user) {
+    res.redirect('/login');
+  } else {
+    console.log(req.user)
+    return next();
+  }
+});
 
 const ini_state = {
   "Iceland": 0,
@@ -29,7 +38,7 @@ function get_majority(obj) {
   var c = {};
   var d;
   var m = 0;
-  Object.keys(obj).forEach(function(k){
+  Object.keys(obj).forEach((k) => {
     if (obj[k] > m) {
       m = obj[k];
       d = k;
@@ -39,14 +48,17 @@ function get_majority(obj) {
   return c[m] === 1 ? d : false;
 }
 
-generate_hash();
-
-router.get('/', function(req, res) {
+router.get('/index', (req, res) => {
+  
+  // Votes.findOne({name: req.body.name, password:hashPassword(req.body.password)}, function(err, found) {
+  //     res.redirect('/index');
+  // })
   res.render('index',{ title: 'Parallel Vote'});
 })
 
 
-router.post('/passphrase', function(req, res, next) {
+router.post('/passphrase', (req, res, next) => {
+  console.log(req);
   var pw_received = req.body.pw;
   if (allowed_pw.indexOf(pw_received) > -1) {
     if (voted.hasOwnProperty(pw_received)) {
@@ -61,19 +73,19 @@ router.post('/passphrase', function(req, res, next) {
   res.end();
 });
 
-router.get('/count', function(req, res, next) {
+router.get('/count', (req, res, next) => {
   res.status(200).send(JSON.stringify(count));
   res.end();
 });
 
-router.post('/choose', function(req, res, next) {
+router.post('/choose', (req, res, next) => {
   var pw = req.body.pw;
   var choices = JSON.parse(req.body.choices);
   if (voted[pw]) {
     res.status(400).send("someone already voted");
     return
   }
-  choices.forEach(function(choice){
+  choices.forEach((choice) => {
     console.log("****************************")
     console.log("voted", choice);
     console.log("****************************")
@@ -89,7 +101,7 @@ router.post('/choose', function(req, res, next) {
   }
 });
 
-router.get('/reset', function(req, res, next) {
+router.get('/reset', (req, res, next) => {
   generate_hash();
   count = 5;
   voted = {};
@@ -97,7 +109,7 @@ router.get('/reset', function(req, res, next) {
   res.redirect('/');
 })
 
-router.get('/results', function(req, res, next) {
+router.get('/results', (req, res, next) => {
   console.log(curr_state);
   var r = get_majority(curr_state);
   if (r) {
